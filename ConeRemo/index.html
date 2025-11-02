@@ -1,1 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Conexión remota</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    h1, h2, h3 {
+      color: #333;
+    }
+    pre {
+      background-color: #eee;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    section {
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Conexión remota</h1>
+
+  <section>
+    <h2>1. Instalar un servidor SSH en Linux</h2>
+    <h3>Crear usuarios</h3>
+    <pre>
+sudo adduser sergiorubio
+    </pre>
+
+    <h3>Instalar el servidor SSH</h3>
+    <pre>
+sudo apt install openssh-server
+    </pre>
+
+    <h3>Probar conexión desde Windows (Putty)</h3>
+    <pre>
+login as: sergiorubio
+sergiorubio@192.168.10.6's password:
+Welcome to Ubuntu 20.04.1 LTS
+    </pre>
+
+    <h3>Probar desde otro Linux</h3>
+    <pre>
+ssh sergiorubio@192.168.10.6
+    </pre>
+
+    <h3>Conexión sin contraseña (clave pública)</h3>
+    <pre>
+ssh-keygen
+ssh-copy-id sergiorubio@192.168.10.6
+ssh sergiorubio@192.168.10.6
+    </pre>
+  </section>
+
+  <section>
+    <h2>2. Conexión de escritorio remoto en Windows (RDP)</h2>
+    <h3>Activar RDP</h3>
+    <p>Ir a <strong>Panel de control &gt; Sistema &gt; Acceso remoto</strong> y habilitar las conexiones remotas.</p>
+
+    <h3>Conexión desde cliente RDP</h3>
+    <pre>
+Escribir las credenciales para conectarse a 192.168.10.20
+Usuario: alumno
+    </pre>
+
+    <h3>Verificar conectividad con ping</h3>
+    <pre>
+ping 192.168.10.6
+ping 192.168.10.1
+    </pre>
+  </section>
+
+  <section>
+    <h2>3. Conexión remota con TeamViewer</h2>
+    <h3>Instalación en Windows y Linux</h3>
+    <p>Instalar TeamViewer en ambos equipos y usar el ID de sesión para conectarse.</p>
+
+    <h3>Conexión desde móvil</h3>
+    <p>Usar la app de TeamViewer para acceder remotamente desde dispositivos móviles.</p>
+
+    <h3>Opciones avanzadas</h3>
+    <ul>
+      <li>Modo presentación</li>
+      <li>Transferencia de archivos</li>
+      <li>Control remoto</li>
+    </ul>
+  </section>
+
+</body>
+</html>
 
