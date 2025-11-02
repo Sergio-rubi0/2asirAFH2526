@@ -31,51 +31,35 @@
   <section>
     <h2>1. Instalar un servidor SSH en Linux</h2>
     <h3>Crear usuarios</h3>
-    <pre>
-sudo adduser sergiorubio
-    </pre>
+    <img src="Imagenes/fotoIA.webp" alt="Crear usuario">
 
     <h3>Instalar el servidor SSH</h3>
-    <pre>
-sudo apt install openssh-server
-    </pre>
+    <img src="Imagenes/fotoIA.webp" alt="Instalar SSH">
 
     <h3>Probar conexión desde Windows (Putty)</h3>
-    <pre>
-login as: sergiorubio
-sergiorubio@192.168.10.6's password:
-Welcome to Ubuntu 20.04.1 LTS
-    </pre>
+    <img src="Imagenes/fotoIA.webp" alt="Conexion Windows">
 
     <h3>Probar desde otro Linux</h3>
-    <pre>
-ssh sergiorubio@192.168.10.6
-    </pre>
+   <img src="Imagenes/fotoIA.webp" alt="Conexion Ubuntu">
 
     <h3>Conexión sin contraseña (clave pública)</h3>
-    <pre>
-ssh-keygen
-ssh-copy-id sergiorubio@192.168.10.6
-ssh sergiorubio@192.168.10.6
-    </pre>
+    <img src="Imagenes/fotoIA.webp" alt="Generar key">
+    <img src="Imagenes/fotoIA.webp" alt="Conexion sin contraseña">
   </section>
 
   <section>
     <h2>2. Conexión de escritorio remoto en Windows (RDP)</h2>
     <h3>Activar RDP</h3>
-    <p>Ir a <strong>Panel de control &gt; Sistema &gt; Acceso remoto</strong> y habilitar las conexiones remotas.</p>
+    <img src="Imagenes/fotoIA.webp" alt="RDP Windows">
 
     <h3>Conexión desde cliente RDP</h3>
-    <pre>
-Escribir las credenciales para conectarse a 192.168.10.20
-Usuario: alumno
-    </pre>
-
-    <h3>Verificar conectividad con ping</h3>
-    <pre>
-ping 192.168.10.6
-ping 192.168.10.1
-    </pre>
+    <ul>
+      <li>Windows:</li>
+      <img src="Imagenes/fotoIA.webp" alt="Credenciales RDP Windows">
+      <img src="Imagenes/fotoIA.webp" alt="Conexion RDP Windows">
+      <li>Ubuntu:</li>
+      <img src="Imagenes/fotoIA.webp" alt="Conexion Remmina Ubuntu">
+    </ul>
   </section>
 
   <section>
