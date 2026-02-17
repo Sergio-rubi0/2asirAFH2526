@@ -1,1 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agente IA</title>
+  <meta name="description" content="Práctica de Agente IA en local">
+ 
+  <style>
+	:root {
+  	--primary: #1e3a8a;
+  	--secondary: #3b82f6;
+  	--accent: #10b981;
+  	--success: #059669;
+  	--warning: #d97706;
+  	--danger: #dc2626;
+  	--bg-primary: #0f172a;
+  	--bg-secondary: #1e293b;
+  	--surface: #334155;
+  	--text-primary: #f8fafc;
+  	--text-secondary: #cbd5e1;
+  	--border: #475569;
+  	--shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  	--shadow-hover: 0 35px 60px -12px rgba(0, 0, 0, 0.6);
+  	--radius: 16px;
+	}
 
+	* {
+  	margin: 0;
+  	padding: 0;
+  	box-sizing: border-box;
+	}
+
+	body {
+  	font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  	background: var(--bg-primary);
+  	color: var(--text-primary);
+  	line-height: 1.7;
+  	overflow-x: hidden;
+	}
+
+	.container {
+  	max-width: 1200px;
+  	margin: 0 auto;
+  	padding: 2rem 1.5rem;
+	}
+
+	/* Hero MINIMAL */
+	.hero {
+  	background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #10b981 100%);
+  	border-radius: var(--radius);
+  	padding: 4rem 2.5rem;
+  	margin-bottom: 3rem;
+  	box-shadow: var(--shadow);
+  	position: relative;
+  	overflow: hidden;
+  	user-select: none;
+  	-webkit-user-select: none;
+  	-moz-user-select: none;
+  	-ms-user-select: none;
+	}
+
+	.hero::before {
+  	content: '';
+  	position: absolute;
+  	top: 0;
+  	left: 0;
+  	right: 0;
+  	bottom: 0;
+  	background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="0.5" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  	opacity: 0.3;
+	}
+
+	.hero-title {
+  	font-size: clamp(2.5rem, 5vw, 4rem);
+  	font-weight: 800;
+  	margin-bottom: 1rem;
+  	background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+  	-webkit-background-clip: text;
+  	-webkit-text-fill-color: transparent;
+  	background-clip: text;
+  	user-select: none;
+	}
+
+	.hero-badge {
+  	display: inline-flex;
+  	align-items: center;
+  	gap: 0.5rem;
+  	padding: 0.5rem 1rem;
+  	background: rgba(255, 255, 255, 0.15);
+  	border: 1px solid rgba(255, 255, 255, 0.2);
+  	border-radius: 50px;
+  	font-size: 0.875rem;
+  	font-weight: 500;
+  	color: rgba(255, 255, 255, 0.9);
+  	backdrop-filter: blur(10px);
+  	user-select: none;
+  	margin-bottom: 2rem;
+	}
+
+	/* Content Cards */
+	.content-card {
+  	background: var(--bg-secondary);
+  	border: 1px solid var(--border);
+  	border-radius: var(--radius);
+  	padding: 2.5rem;
+  	margin-bottom: 2rem;
+  	box-shadow: var(--shadow);
+  	transition: all 0.3s ease;
+  	position: relative;
+	}
+
+	.content-card:hover {
+  	transform: translateY(-4px);
+  	box-shadow: var(--shadow-hover);
+	}
+
+	.content-card h2 {
+  	font-size: 1.875rem;
+  	font-weight: 700;
+  	margin-bottom: 1.25rem;
+  	color: var(--text-primary);
+  	display: flex;
+  	align-items: center;
+  	gap: 0.75rem;
+	}
+
+	.content-card h2::before {
+  	content: attr(data-step);
+  	background: var(--secondary);
+  	color: white;
+  	width: 2.5rem;
+  	height: 2.5rem;
+  	border-radius: 50%;
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	font-weight: 600;
+  	font-size: 0.875rem;
+  	flex-shrink: 0;
+	}
+
+	/* Command Blocks */
+	.command-block {
+  	background: rgba(15, 23, 42, 0.7);
+  	border: 1px solid var(--border);
+  	border-radius: 12px;
+  	padding: 1.75rem;
+  	margin: 1.75rem 0;
+  	position: relative;
+  	overflow: hidden;
+	}
+
+	.command-label {
+  	position: absolute;
+  	top: 1.25rem;
+  	right: 1.75rem;
+  	background: var(--secondary);
+  	color: white;
+  	padding: 0.375rem 0.875rem;
+  	border-radius: 8px;
+  	font-size: 0.75rem;
+  	font-weight: 600;
+  	backdrop-filter: blur(10px);
+	}
+
+	.command-code {
+  	font-family: 'Fira Code', 'Consolas', monospace;
+  	font-size: 0.95rem;
+  	line-height: 1.6;
+  	color: var(--text-primary);
+  	background: none;
+  	border: none;
+  	width: 100%;
+  	resize: none;
+  	outline: none;
+  	padding-right: 6rem;
+	}
+
+	/* Image Gallery */
+	.media-grid {
+  	display: grid;
+  	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  	gap: 1.5rem;
+  	margin-top: 2rem;
+	}
+
+	.media-item {
+  	position: relative;
+  	border-radius: 12px;
+  	overflow: hidden;
+  	background: var(--surface);
+  	border: 1px solid var(--border);
+  	cursor: pointer;
+  	transition: all 0.3s ease;
+  	height: 220px;
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	color: var(--text-secondary);
+  	font-size: 0.95rem;
+  	text-align: center;
+  	padding: 2rem;
+	}
+
+	.media-item:hover {
+  	transform: scale(1.02);
+  	box-shadow: var(--shadow-hover);
+	}
+
+	/* Lightbox */
+	.lightbox {
+  	position: fixed;
+  	inset: 0;
+  	background: rgba(0, 0, 0, 0.9);
+  	display: none;
+  	align-items: center;
+  	justify-content: center;
+  	z-index: 1000;
+  	padding: 2rem;
+  	backdrop-filter: blur(5px);
+	}
+
+	.lightbox.active {
+  	display: flex;
+	}
+
+	.lightbox img {
+  	max-width: 95%;
+  	max-height: 95%;
+  	border-radius: 12px;
+  	box-shadow: 0 50px 100px rgba(0, 0, 0, 0.8);
+	}
+
+	/* Footer */
+	.footer {
+  	text-align: center;
+  	padding: 3rem 0 2rem;
+  	color: var(--text-secondary);
+  	border-top: 1px solid var(--border);
+  	margin-top: 3rem;
+	}
+
+	.scroll-top {
+  	display: inline-flex;
+  	align-items: center;
+  	gap: 0.5rem;
+  	margin-top: 1.5rem;
+  	color: var(--secondary);
+  	text-decoration: none;
+  	font-weight: 600;
+  	font-size: 0.95rem;
+  	padding: 0.75rem 1.75rem;
+  	background: rgba(59, 130, 246, 0.1);
+  	backdrop-filter: blur(10px);
+  	border: 1px solid rgba(59, 130, 246, 0.3);
+  	border-radius: 12px;
+  	transition: all 0.3s ease;
+	}
+
+	.scroll-top:hover {
+  	background: rgba(59, 130, 246, 0.2);
+  	border-color: var(--secondary);
+  	transform: translateY(-2px);
+  	color: var(--secondary);
+	}
+
+	/* Responsive */
+	@media (max-width: 768px) {
+  	.container {
+    	padding: 1.5rem 1rem;
+  	}
+ 	 
+  	.hero {
+    	padding: 3rem 2rem;
+  	}
+ 	 
+  	.content-card {
+    	padding: 2rem;
+  	}
+
+  	.content-card h2::before {
+    	width: 2.25rem;
+    	height: 2.25rem;
+    	font-size: 0.8rem;
+  	}
+
+  	.scroll-top {
+    	padding: 0.625rem 1.25rem;
+    	font-size: 0.9rem;
+  	}
+	}
+  </style>
+</head>
+
+<body>
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+	<img src="" alt="Imagen ampliada">
+  </div>
+
+  <div class="container">
+	<!-- Hero -->
+	<section class="hero" role="banner">
+  	<div class="hero-badge">🚀 Práctica de Agente IA en local</div>
+  	<h1 class="hero-title">Manual de Agente</h1>
+	</section>
+
+	<!-- Main Content - SIN primer punto -->
+	<main>
+  	<article class="content-card" data-step="01">
+    	<h2 data-step="01">Instalar Ollama y cargar los modelos en Ollama</h2>
+    	<p>Instala Ollama vía Homebrew:</p>
+    	<div class="command-block">
+      	<div class="command-label">Terminal</div>
+      	<textarea class="command-code" readonly>brew install ollama</textarea>
+    	</div>
+    	<div class="media-grid">
+      	<div class="media-item" data-src="../imgIA/cuan1.jpg">
+        	📱 Instalación Ollama
+      	</div>
+    	</div>
+  	</article>
+
+  	<!-- Verificar instalación -->
+  	<article class="content-card" data-step="02">
+    	<h2 data-step="02">Instalamos Opencode para cargar nuestro agente en local</h2>
+    	<p>Vemos si se ha instalado y, luego, vemos modelos descargados:</p>
+    	<div class="command-block">
+      	<div class="command-label">Comandos</div>
+      	<textarea class="command-code" readonly>ollama --version
+ollama list</textarea>
+    	</div>
+  	</article>
+
+  	<!-- Descargar modelos -->
+  	<article class="content-card" data-step="03">
+    	<h2 data-step="03">Una vez cargado el agente, ahora lo que hacemos es comprobar que funcone correctamente</h2>
+    	<p>Modelos que hemos descargado, luego lo ejecutamos:</p>
+    	<div class="command-block">
+      	<div class="command-label">Descarga</div>
+      	<textarea class="command-code" readonly>ollama pull llama3
+ollama pull mistral
+ollama pull gemma2:2b</textarea>
+    	</div>
+  	</article>
+
+  	<!-- Probar modelos -->
+  	<article class="content-card" data-step="04">
+    	<h2 data-step="04">Ejecutamos y probamos el modelo que vamos ha utilizar</h2>
+    	<p>Una vez ejecutado el modelo, iniciamos una conversación:</p>
+    	<div class="command-block">
+      	<div class="command-label">Ejecutar</div>
+      	<textarea class="command-code" readonly>ollama run llama3
+# Para salir: /bye</textarea>
+    	</div>
+  	</article>
+
+  	<!-- Entorno Python -->
+  	<article class="content-card" data-step="05">
+    	<h2 data-step="05">Configurarmos el entorno Python</h2>
+    	<div class="command-block">
+      	<div class="command-label">Virtualenv</div>
+      	<textarea class="command-code" readonly>python3 -m venv venv
+source venv/bin/activate</textarea>
+    	</div>
+  	</article>
+
+  	<!-- Librerías -->
+  	<article class="content-card" data-step="06">
+    	<h2 data-step="06">Luego, instalamos las dependencias</h2>
+    	<div class="command-block">
+      	<div class="command-label">pip</div>
+      	<textarea class="command-code" readonly>pip install transformers torch accelerate
+pip install gguf</textarea>
+    	</div>
+  	</article>
+
+  	<!-- Script prueba -->
+  	<article class="content-card" data-step="07">
+    	<h2 data-step="07">Después, creamos un script de verificación</h2>
+    	<p>Crear <code>gemma_test.py</code> para validar carga del modelo:</p>
+    	<div class="command-block">
+      	<div class="command-label">Ejecutar</div>
+      	<textarea class="command-code" readonly>python gemma_test.py</textarea>
+    	</div>
+  	</article>
+
+  	<!-- Convertir GGUF -->
+  	<article class="content-card" data-step="08">
+    	<h2 data-step="08">Más adelante, le hacemos una conversión a GGUF</h2>
+    	<p>Transformamos el modelo HuggingFace a formato GGUF:</p>
+    	<div class="command-block">
+      	<div class="command-label">Conversión</div>
+      	<textarea class="command-code" readonly>python convert-hf-to-gguf.py lfm2-1.2b --outfile lfm2.gguf</textarea>
+    	</div>
+  	</article>
+
+  	<!-- Cuantización principal -->
+  	<article class="content-card" data-step="09">
+    	<h2 data-step="09">Luego, lo cuantizamos Q4_K_M</h2>
+    	<p>Con esto, lo que hacemos es reducirle el tamaño:</p>
+    	<div class="command-block">
+      	<div class="command-label">Cuantizar</div>
+      	<textarea class="command-code" readonly>python convert-hf-to-gguf.py lfm2-1.2b \
+  --outtype q4_k_m \
+  --outfile lfm2-1.2b-q4.gguf</textarea>
+    	</div>
+  	</article>
+
+  	<!-- Comparación -->
+  	<article class="content-card" data-step="10">
+    	<h2 data-step="10">Comparamos los tamaños de las dos IAs</h2>
+    	<div class="command-block">
+      	<div class="command-label">ls</div>
+      	<textarea class="command-code" readonly>ls -lh lfm2*</textarea>
+    	</div>
+    	<div class="media-grid">
+      	<div class="media-item" data-src="../imgIA/cuan6.jpg">
+        	📊 Comparativa archivos
+      	</div>
+    	</div>
+  	</article>
+
+  	<!-- LM Studio -->
+  	<article class="content-card" data-step="11">
+    	<h2 data-step="11">Ahora, pasamos el ambos modelos al LM Studio para realizarle una pregunta y ver si dan respuestas distintas</h2>
+    	<div class="command-block">
+      	<div class="command-label">Importar</div>
+      	<textarea class="command-code" readonly>lmstudio import ~/models/lfm2-1.2b-q4_K_M.gguf</textarea>
+    	</div>
+  	</article>
+
+  	<!-- Resultados -->
+  	<article class="content-card" data-step="12">
+    	<h2 data-step="12">Y, por último, comparamos los tamaños para ver que la cuantización ha funcionado correctamente</h2>
+    	<p>
+      	Modelos cuantizados consumen significativamente menos RAM y generan tokens más rápido.
+    	</p>
+    	<div class="media-grid">
+      	<div class="media-item" data-src="../imgIA/cuan8.jpg">
+        	📈 Modelo Original
+      	</div>
+      	<div class="media-item" data-src="../imgIA/cuan9.jpg">
+        	⚡ Modelo Q4
+      	</div>
+    	</div>
+  	</article>
+	</main>
+
+	<!-- Footer -->
+	<footer class="footer">
+  	<a href="#" class="scroll-top">
+    	⬆️ Subir al inicio
+  	</a>
+	</footer>
+  </div>
+
+  <script>
+	// Lightbox
+	const lightbox = document.getElementById('lightbox');
+	const lightboxImg = lightbox.querySelector('img');
+
+	document.querySelectorAll('.media-item').forEach(item => {
+  	item.addEventListener('click', () => {
+    	const src = item.dataset.src;
+    	if (src) {
+      	lightboxImg.src = src;
+      	lightboxImg.alt = item.textContent.trim();
+      	lightbox.classList.add('active');
+    	}
+  	});
+	});
+
+	lightbox.addEventListener('click', () => {
+  	lightbox.classList.remove('active');
+  	lightboxImg.src = '';
+	});
+
+	document.addEventListener('keydown', (e) => {
+  	if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+    	lightbox.classList.remove('active');
+    	lightboxImg.src = '';
+  	}
+	});
+
+	document.querySelector('.scroll-top').addEventListener('click', (e) => {
+  	e.preventDefault();
+  	window.scrollTo({ top: 0, behavior: 'smooth' });
+	});
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</body>
+</html>
