@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Guía Completa de Cuantización de Modelos IA</title>
-  <meta name="description" content="Manual profesional para cuantizar modelos de IA con Ollama, Python y formato GGUF.">
+  <title>Guía de LLM</title>
+  <meta name="description" content="Manual profesional para LLM">
  
   <style>
 	:root {
@@ -242,8 +242,8 @@
   <div class="container">
 	<!-- Hero -->
 	<section class="hero" role="banner">
-  	<div class="hero-badge">🚀 Guía Práctica · Ollama + Python + GGUF</div>
-  	<h1 class="hero-title">Manual de Cuantización</h1>
+  	<div class="hero-badge">🚀 Guía Práctica LLM</div>
+  	<h1 class="hero-title">Manual de LLM</h1>
 	</section>
 
 	<!-- Main Content -->
@@ -267,14 +267,18 @@
       	<textarea class="command-code" readonly>cd mi-chef-bot
 python3 -m venv venv</textarea>
     	</div>
+		<div class="media-grid">
+      	<div class="media-item" data-src="imagen1.png">
+        	<img src="../Imagenes/imagen1.png" alt="Terminal - Creación venv">
+      	</div>
+    	</div>
   	</article>
 
   	<!-- Descargar modelos -->
   	<article class="content-card" data-step="03">
     	<h2 data-step="03">Luego instalamos todo lo que necesitamos para crear el LLM</h2>
-    	<p>Modelos que hemos descargado, luego lo ejecutamos:</p>
     	<div class="command-block">
-      	<div class="command-label">Descarga</div>
+      	<div class="command-label">Descarga terminal</div>
       	<textarea class="command-code" readonly>pip install --upgrade pip
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 pip install transformers datasets accelerate
@@ -283,95 +287,102 @@ cd axolotl && pip install -e .[flash-attn,deepspeed] && cd ..
 git clone https://github.com/ggerganov/llama.cpp
 pip install -r llama.cpp/requirements.txt</textarea>
     	</div>
+		<div class="media-grid">
+      	<div class="media-item" data-src="imagen2.png">
+        	<img src="../Imagenes/imagen2.png" alt="Terminal - Instalación torch">
+      	</div>
+    	</div>
   	</article>
 
   	<!-- Probar modelos -->
   	<article class="content-card" data-step="04">
-    	<h2 data-step="04">Ejecutamos y probamos el modelo que vamos ha utilizar</h2>
-    	<p>Una vez ejecutado el modelo, iniciamos una conversación:</p>
+    	<h2 data-step="04">Creación del Dataset</h2>
+    	<p>Después de instalar todo, tenemos que crear el dataset. Esto es lo que le tenemos que poner:</p>
     	<div class="command-block">
-      	<div class="command-label">Ejecutar</div>
-      	<textarea class="command-code" readonly>ollama run llama3
-# Para salir: /bye</textarea>
+      	<div class="command-label">JSON</div>
+      	<textarea class="command-code" readonly>{"instruction": "Tengo tomates, mozzarella y albahaca.", "output": "Ensalada Caprese:
+Alterna rodajas de tomate y mozzarella. Añade albahaca, sal, pimienta y aceite."}
+{"instruction": "Garbanzos, espinacas y pimentón.", "output": "Potaje de Garbanzos: Sofríe
+ajo y pimentón. Añade garbanzos y espinacas. Cocina con caldo."}
+{"instruction": "Lentejas, chorizo y zanahoria.", "output": "Lentejas con Chorizo: Cuece
+lentejas con zanahoria y chorizo. Añade sofrito opcional."}</textarea>
     	</div>
   	</article>
 
   	<!-- Entorno Python -->
   	<article class="content-card" data-step="05">
-    	<h2 data-step="05">Configurarmos el entorno Python</h2>
+    	<h2 data-step="05">Configuramos YAML:</h2>
     	<div class="command-block">
-      	<div class="command-label">Virtualenv</div>
-      	<textarea class="command-code" readonly>python3 -m venv venv
-source venv/bin/activate</textarea>
+      	<div class="command-label">YAML</div>
+      	<textarea class="command-code" readonly>Crea configchef.yml en raíz</textarea>
     	</div>
   	</article>
 
   	<!-- Librerías -->
   	<article class="content-card" data-step="06">
-    	<h2 data-step="06">Luego, instalamos las dependencias</h2>
+    	<h2 data-step="06">Código que tiene que tener</h2>
     	<div class="command-block">
-      	<div class="command-label">pip</div>
-      	<textarea class="command-code" readonly>pip install transformers torch accelerate
-pip install gguf</textarea>
+      	<div class="command-label">codigo</div>
+      	<textarea class="command-code" readonly>base_model: microsoft/Phi-3-mini-4k-instruct
+model_type: AutoModelForCausalLM
+tokenizer_type: AutoTokenizer
+load_in_8bit: true
+datasets:
+- path: recetas.jsonl
+type: alpaca
+adapter: qlora
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+epochs: 4
+batch_size: 2
+gradient_accumulation_steps: 4
+output_dir: lora-out</textarea>
     	</div>
   	</article>
 
   	<!-- Script prueba -->
   	<article class="content-card" data-step="07">
-    	<h2 data-step="07">Después, creamos un script de verificación</h2>
-    	<p>Crear <code>gemma_test.py</code> para validar carga del modelo:</p>
+    	<h2 data-step="07">Ejecutamos lo siguiente</h2>
     	<div class="command-block">
       	<div class="command-label">Ejecutar</div>
-      	<textarea class="command-code" readonly>python gemma_test.py</textarea>
+      	<textarea class="command-code" readonly>accelerate launch -m axolotl.cli.train configchef.yml</textarea>
     	</div>
   	</article>
 
   	<!-- Convertir GGUF -->
   	<article class="content-card" data-step="08">
-    	<h2 data-step="08">Más adelante, le hacemos una conversión a GGUF</h2>
-    	<p>Transformamos el modelo HuggingFace a formato GGUF:</p>
+    	<h2 data-step="08">Merge LoRA:</h2>
+    	<p>Esto va a producir un modelo fusionado:</p>
     	<div class="command-block">
-      	<div class="command-label">Conversión</div>
-      	<textarea class="command-code" readonly>python convert-hf-to-gguf.py lfm2-1.2b --outfile lfm2.gguf</textarea>
+      	<div class="command-label">fusion</div>
+      	<textarea class="command-code" readonly>cd axolotl
+accelerate launch -m axolotl.cli.merge_lora configchef.yml lora_model_dir=./../lora-out
+--threads 8</textarea>
     	</div>
   	</article>
 
   	<!-- Cuantización principal -->
   	<article class="content-card" data-step="09">
-    	<h2 data-step="09">Luego, lo cuantizamos Q4_K_M</h2>
+    	<h2 data-step="09">Cuantización GGUF</h2>
     	<p>Con esto, lo que hacemos es reducirle el tamaño:</p>
     	<div class="command-block">
       	<div class="command-label">Cuantizar</div>
-      	<textarea class="command-code" readonly>python convert-hf-to-gguf.py lfm2-1.2b \
-  --outtype q4_k_m \
-  --outfile lfm2-1.2b-q4.gguf</textarea>
+      	<textarea class="command-code" readonly>cd ../llama.cpp
+python convert_hf_to_gguf.py ../merged/ --outfile chef-bot-fp16.gguf
+./llama-quantize chef-bot-fp16.gguf chef-bot-q4.gguf q4_k_m</textarea>
     	</div>
   	</article>
 
   	<!-- Comparación -->
   	<article class="content-card" data-step="10">
-    	<h2 data-step="10">Comparamos los tamaños de las dos IAs</h2>
-    	<div class="command-block">
-      	<div class="command-label">ls</div>
-      	<textarea class="command-code" readonly>ls -lh lfm2*</textarea>
-    	</div>
-  	</article>
-
-  	<!-- LM Studio -->
-  	<article class="content-card" data-step="11">
-    	<h2 data-step="11">Ahora, pasamos el ambos modelos al LM Studio para realizarle una pregunta y ver si dan respuestas distintas</h2>
-    	<div class="command-block">
-      	<div class="command-label">Importar</div>
-      	<textarea class="command-code" readonly>lmstudio import ~/models/lfm2-1.2b-q4_K_M.gguf</textarea>
-    	</div>
-  	</article>
-
-  	<!-- Resultados -->
-  	<article class="content-card" data-step="12">
-    	<h2 data-step="12">Y, por último, comparamos los tamaños para ver que la cuantización ha funcionado correctamente</h2>
-    	<p>
-      	Modelos cuantizados consumen significativamente menos RAM y generan tokens más rápido.
-    	</p>
+    	<h2 data-step="10">Probar en LM Studio</h2>
+		<p>Tenemos que probar el modelo, para ello tenemos que seguir el siguiente procedimiento:</p>
+		<ul>
+			<li>Descarga LM Studio de lmstudio.ai.</li>
+			<li>Copia chef-bot-q4.gguf a carpeta modelos.</li>
+			<li>Abre, carga modelo, prueba: "Tengo aguacates, cebolla, tomate y lima" → debe generar receta.</li>
+		</ul>
   	</article>
 	</main>
 
