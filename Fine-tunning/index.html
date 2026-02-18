@@ -1,1 +1,308 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-entreno IA</title>
+<meta name="description" content="Práctica de Pre-entreno de una IA">
+
+<style>
+:root {
+--primary: #1e3a8a;
+--secondary: #3b82f6;
+--accent: #10b981;
+--bg-primary: #0f172a;
+--bg-secondary: #1e293b;
+--surface: #334155;
+--text-primary: #f8fafc;
+--text-secondary: #cbd5e1;
+--border: #475569;
+--shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+--shadow-hover: 0 35px 60px -12px rgba(0, 0, 0, 0.6);
+--radius: 16px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+background: var(--bg-primary);
+color: var(--text-primary);
+line-height: 1.7;
+overflow-x: hidden;
+}
+
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 2rem 1.5rem;
+}
+
+.hero {
+background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #10b981 100%);
+border-radius: var(--radius);
+padding: 4rem 2.5rem;
+margin-bottom: 3rem;
+box-shadow: var(--shadow);
+position: relative;
+overflow: hidden;
+user-select: none;
+}
+
+.hero::before {
+content: '';
+position: absolute;
+top: 0; left: 0; right: 0; bottom: 0;
+background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="0.5" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+opacity: 0.3;
+}
+
+.hero-title {
+font-size: clamp(2.5rem, 5vw, 4rem);
+font-weight: 800;
+margin-bottom: 1rem;
+background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+
+.hero-badge {
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+padding: 0.5rem 1rem;
+background: rgba(255,255,255,0.15);
+border: 1px solid rgba(255,255,255,0.2);
+border-radius: 50px;
+font-size: 0.875rem;
+font-weight: 500;
+color: rgba(255,255,255,0.9);
+backdrop-filter: blur(10px);
+margin-bottom: 2rem;
+}
+
+.content-card {
+background: var(--bg-secondary);
+border: 1px solid var(--border);
+border-radius: var(--radius);
+padding: 2.5rem;
+margin-bottom: 2rem;
+box-shadow: var(--shadow);
+transition: all 0.3s ease;
+}
+
+.content-card:hover {
+transform: translateY(-4px);
+box-shadow: var(--shadow-hover);
+}
+
+.content-card h2 {
+font-size: 1.875rem;
+font-weight: 700;
+margin-bottom: 1.25rem;
+color: var(--text-primary);
+display: flex;
+align-items: center;
+gap: 0.75rem;
+}
+
+.content-card h2::before {
+content: attr(data-step);
+background: var(--secondary);
+color: white;
+width: 2.5rem;
+height: 2.5rem;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 600;
+font-size: 0.875rem;
+flex-shrink: 0;
+}
+
+.media-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+gap: 1.5rem;
+margin-top: 2rem;
+}
+
+.media-item {
+position: relative;
+border-radius: 12px;
+overflow: hidden;
+background: var(--surface);
+border: 1px solid var(--border);
+cursor: pointer;
+transition: all 0.3s ease;
+height: 220px;
+}
+
+.media-item img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: block;
+transition: transform 0.3s ease;
+}
+
+.media-item:hover img {
+transform: scale(1.04);
+}
+
+.media-item:hover {
+box-shadow: var(--shadow-hover);
+}
+
+.lightbox {
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.92);
+display: none;
+align-items: center;
+justify-content: center;
+z-index: 1000;
+padding: 2rem;
+backdrop-filter: blur(6px);
+}
+
+.lightbox.active { display: flex; }
+
+.lightbox img {
+max-width: 95%;
+max-height: 92vh;
+border-radius: 12px;
+box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+}
+
+.footer {
+text-align: center;
+padding: 3rem 0 2rem;
+color: var(--text-secondary);
+border-top: 1px solid var(--border);
+margin-top: 3rem;
+}
+
+.scroll-top {
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+margin-top: 1.5rem;
+color: var(--secondary);
+text-decoration: none;
+font-weight: 600;
+font-size: 0.95rem;
+padding: 0.75rem 1.75rem;
+background: rgba(59,130,246,0.1);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(59,130,246,0.3);
+border-radius: 12px;
+transition: all 0.3s ease;
+}
+
+.scroll-top:hover {
+background: rgba(59,130,246,0.2);
+border-color: var(--secondary);
+transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+.container { padding: 1.5rem 1rem; }
+.hero { padding: 3rem 2rem; }
+.content-card { padding: 2rem; }
+.content-card h2::before { width: 2.25rem; height: 2.25rem; font-size: 0.8rem; }
+.scroll-top { padding: 0.625rem 1.25rem; font-size: 0.9rem; }
+}
+</style>
+</head>
+
+<body>
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <img src="" alt="Imagen ampliada">
+</div>
+
+<div class="container">
+  <section class="hero" role="banner">
+    <div class="hero-badge">🚀 Práctica de Fine-tunning de una IA</div>
+    <h1 class="hero-title">Manual de Fine-tunning</h1>
+  </section>
+
+  <main>
+
+    <!-- Paso 01 -->
+    <article class="content-card" data-step="01">
+      <h2 data-step="01">Empleamos la IA google/gemma-2-2b-it y después, creamos el archivo json y lo editamos y ponemos esto:</h2>
+      <div class="media-grid">
+        <div class="media-item" data-src="../Imagenes/fine1.png">
+          <img src="../Imagenes/fine1.png" alt="Creación carpeta">
+        </div>
+      </div>
+    </article>
+
+    <!-- Paso 02 -->
+    <article class="content-card" data-step="02">
+      <h2 data-step="02">Luego creamos el archivo entrenar_personaje.py y lo que ponemos en la configuración es esto:</h2>
+      <div class="media-grid">
+        <div class="media-item" data-src="../Imagenes/fine2.png">
+          <img src="../Imagenes/fine2.png" alt="Ejecución del archivo">
+        </div>
+      </div>
+    </article>
+
+    <!-- Paso 03 -->
+    <article class="content-card" data-step="03">
+      <h2 data-step="03">Ppr último, probamos que el fine-tunning ha funcionado correctamente:</h2>
+      <div class="media-grid">
+        <div class="media-item" data-src="../Imagenes/fine3.png">
+          <img src="../Imagenes/fine3.png" alt="Instalación torch">
+      </div>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <a href="#" class="scroll-top">⬆️ Subir al inicio</a>
+  </footer>
+</div>
+
+<script>
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = lightbox.querySelector('img');
+
+document.querySelectorAll('.media-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const src = item.dataset.src;
+    if (src) {
+      lightboxImg.src = src;
+      lightboxImg.alt = item.querySelector('img')?.alt || '';
+      lightbox.classList.add('active');
+    }
+  });
+});
+
+lightbox.addEventListener('click', () => {
+  lightbox.classList.remove('active');
+  lightboxImg.src = '';
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+    lightbox.classList.remove('active');
+    lightboxImg.src = '';
+  }
+});
+
+document.querySelector('.scroll-top').addEventListener('click', (e) => {
+  e.preventDefault();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</body>
+</html>
